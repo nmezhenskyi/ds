@@ -19,6 +19,7 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+// Package bst implements AVL balanced binary search tree.
 package bst
 
 import (
@@ -59,6 +60,23 @@ func (tree *Tree[K, V]) Height() int {
 		return 0
 	}
 	return tree.root.height
+}
+
+func (tree *Tree[K, V]) Keys() []K {
+	keys := make([]K, 0)
+
+	var walk func(node *Node[K, V])
+	walk = func(node *Node[K, V]) {
+		if node == nil {
+			return
+		}
+		walk(node.left)
+		keys = append(keys, node.key)
+		walk(node.right)
+	}
+	walk(tree.root)
+
+	return keys
 }
 
 type Node[K cmp.Ordered, V any] struct {
@@ -157,7 +175,7 @@ func remove[K cmp.Ordered, V any](node *Node[K, V], key K) *Node[K, V] {
 				*node = *temp
 			}
 		} else {
-			temp := nodeWithMinVal(node.right)
+			temp := getMinNode(node.right)
 			node.key = temp.key
 			node.right = remove(node.right, temp.key)
 		}
@@ -203,7 +221,10 @@ func getBalance[K cmp.Ordered, V any](node *Node[K, V]) int {
 	return height(node.left) - height(node.right)
 }
 
-func nodeWithMinVal[K cmp.Ordered, V any](node *Node[K, V]) *Node[K, V] {
+func getMinNode[K cmp.Ordered, V any](node *Node[K, V]) *Node[K, V] {
+	if node == nil {
+		return nil
+	}
 	curr := node
 	for curr.left != nil {
 		curr = curr.left
