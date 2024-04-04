@@ -87,6 +87,14 @@ type Node[K cmp.Ordered, V any] struct {
 	data   V
 }
 
+func (node *Node[K, V]) Key() K {
+	return node.key
+}
+
+func (node *Node[K, V]) Data() V {
+	return node.data
+}
+
 func (node *Node[K, V]) String() string {
 	return fmt.Sprintf("%v", node.key)
 }
