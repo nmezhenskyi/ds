@@ -24,7 +24,6 @@ package bst
 import (
 	"cmp"
 	"fmt"
-	"strings"
 )
 
 type Tree[K cmp.Ordered, V any] struct {
