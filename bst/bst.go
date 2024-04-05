@@ -29,13 +29,14 @@ import (
 
 type Tree[K cmp.Ordered, V any] struct {
 	root *Node[K, V]
+	size int
 }
 
 func (tree *Tree[K, V]) Insert(key K, data V) {
 	if tree == nil {
 		panic("bst: inserting into a nil tree")
 	}
-	tree.root = insert(tree.root, key, data)
+	tree.root = insert(tree.root, key, data, &tree.size)
 }
 
 func (tree *Tree[K, V]) Search(key K) *Node[K, V] {
@@ -49,17 +50,21 @@ func (tree *Tree[K, V]) Remove(key K) {
 	if tree == nil {
 		panic("bst: removing in a nil tree")
 	}
-	tree.root = remove(tree.root, key)
+	tree.root = remove(tree.root, key, &tree.size)
 }
 
 func (tree *Tree[K, V]) Height() int {
-	if tree == nil {
-		panic("bst: calculating height of a nil tree")
-	}
-	if tree.root == nil {
+	if tree == nil || tree.root == nil {
 		return 0
 	}
 	return tree.root.height
+}
+
+func (tree *Tree[K, V]) Size() int {
+	if tree == nil {
+		return 0
+	}
+	return tree.size
 }
 
 func (tree *Tree[K, V]) Keys() []K {
@@ -99,8 +104,9 @@ func (node *Node[K, V]) String() string {
 	return fmt.Sprintf("%v", node.key)
 }
 
-func insert[K cmp.Ordered, V any](node *Node[K, V], key K, data V) *Node[K, V] {
+func insert[K cmp.Ordered, V any](node *Node[K, V], key K, data V, size *int) *Node[K, V] {
 	if node == nil || node.height == 0 {
+		*size++
 		return &Node[K, V]{
 			key:    key,
 			left:   nil,
@@ -111,9 +117,9 @@ func insert[K cmp.Ordered, V any](node *Node[K, V], key K, data V) *Node[K, V] {
 	}
 
 	if key < node.key {
-		node.left = insert(node.left, key, data)
+		node.left = insert(node.left, key, data, size)
 	} else if key > node.key {
-		node.right = insert(node.right, key, data)
+		node.right = insert(node.right, key, data, size)
 	} else {
 		return node
 	}
@@ -156,15 +162,15 @@ func search[K cmp.Ordered, V any](node *Node[K, V], key K) *Node[K, V] {
 	}
 }
 
-func remove[K cmp.Ordered, V any](node *Node[K, V], key K) *Node[K, V] {
+func remove[K cmp.Ordered, V any](node *Node[K, V], key K, size *int) *Node[K, V] {
 	if node == nil {
 		return nil
 	}
 
 	if key < node.key {
-		node.left = remove(node.left, key)
+		node.left = remove(node.left, key, size)
 	} else if key > node.key {
-		node.right = remove(node.right, key)
+		node.right = remove(node.right, key, size)
 	} else {
 		if node.left == nil || node.right == nil {
 			var temp *Node[K, V]
@@ -182,10 +188,12 @@ func remove[K cmp.Ordered, V any](node *Node[K, V], key K) *Node[K, V] {
 				// TODO: review this
 				*node = *temp
 			}
+
+			*size--
 		} else {
 			temp := getMinNode(node.right)
 			node.key = temp.key
-			node.right = remove(node.right, temp.key)
+			node.right = remove(node.right, temp.key, size)
 		}
 	}
 
