@@ -265,6 +265,12 @@ func (l *List[V]) Swap(idx1, idx2 int) {
 	} else if i2 == 0 {
 		l.head = node1
 	}
+
+	if i1 == l.size-1 {
+		l.tail = node2
+	} else if i2 == l.size-1 {
+		l.tail = node1
+	}
 }
 
 func (l *List[V]) ToSlice() []V {
