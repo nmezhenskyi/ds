@@ -281,8 +281,9 @@ func (l *List[V]) Reverse() {
 		return
 	}
 
-	var prev, curr, next *node[V]
+	var prev, curr, next, head *node[V]
 	curr = l.head
+	head = l.head
 
 	for curr != nil {
 		next = curr.next
@@ -291,7 +292,7 @@ func (l *List[V]) Reverse() {
 		curr = next
 	}
 	l.head = prev
-	l.tail = curr
+	l.tail = head
 }
 
 func (l *List[V]) ToSlice() []V {
