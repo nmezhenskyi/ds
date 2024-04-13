@@ -277,7 +277,7 @@ func (l *List[V]) Reverse() {
 	if l == nil {
 		panic("list: calling Reverse() on a nil list")
 	}
-	if l.size == 0 {
+	if l.size == 0 || l.size == 1 {
 		return
 	}
 
