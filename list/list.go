@@ -273,6 +273,27 @@ func (l *List[V]) Swap(idx1, idx2 int) {
 	}
 }
 
+func (l *List[V]) Reverse() {
+	if l == nil {
+		panic("list: calling Reverse() on a nil list")
+	}
+	if l.size == 0 {
+		return
+	}
+
+	var prev, curr, next *node[V]
+	curr = l.head
+
+	for curr != nil {
+		next = curr.next
+		curr.next = prev
+		prev = curr
+		curr = next
+	}
+	l.head = prev
+	l.tail = curr
+}
+
 func (l *List[V]) ToSlice() []V {
 	if l == nil {
 		panic("list: calling ToSlice() on a nil list")
