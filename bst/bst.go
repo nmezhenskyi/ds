@@ -185,7 +185,7 @@ func remove[K cmp.Ordered, V any](node *Node[K, V], key K, size *int) *Node[K, V
 				temp = node
 				node = nil
 			} else {
-				// TODO: review this
+				// TODO: review this, does a shallow copy.
 				*node = *temp
 			}
 
