@@ -34,21 +34,21 @@ type Tree[K cmp.Ordered, V any] struct {
 
 func (tree *Tree[K, V]) Insert(key K, data V) {
 	if tree == nil {
-		panic("bst: inserting into a nil tree")
+		panic("bst: called Insert() on a nil tree")
 	}
 	tree.root = insert(tree.root, key, data, &tree.size)
 }
 
-func (tree *Tree[K, V]) Search(key K) *Node[K, V] {
+func (tree *Tree[K, V]) Find(key K) *Node[K, V] {
 	if tree == nil {
-		panic("bst: searching a nil tree")
+		panic("bst: called Find() on a nil tree")
 	}
-	return search(tree.root, key)
+	return find(tree.root, key)
 }
 
 func (tree *Tree[K, V]) Remove(key K) {
 	if tree == nil {
-		panic("bst: removing in a nil tree")
+		panic("bst: called Remove() on a nil tree")
 	}
 	tree.root = remove(tree.root, key, &tree.size)
 }
@@ -146,7 +146,7 @@ func insert[K cmp.Ordered, V any](node *Node[K, V], key K, data V, size *int) *N
 	return node
 }
 
-func search[K cmp.Ordered, V any](node *Node[K, V], key K) *Node[K, V] {
+func find[K cmp.Ordered, V any](node *Node[K, V], key K) *Node[K, V] {
 	if node == nil {
 		return nil
 	}
@@ -156,9 +156,9 @@ func search[K cmp.Ordered, V any](node *Node[K, V], key K) *Node[K, V] {
 	}
 
 	if key < node.key {
-		return search(node.left, key)
+		return find(node.left, key)
 	} else {
-		return search(node.right, key)
+		return find(node.right, key)
 	}
 }
 
