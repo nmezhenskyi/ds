@@ -27,7 +27,7 @@ type Stack[T any] struct {
 	size  int
 }
 
-func NewStack[T any]() *Stack[T] {
+func New[T any]() *Stack[T] {
 	return &Stack[T]{stack: []T{}}
 }
 
@@ -45,6 +45,10 @@ func (s *Stack[T]) Pop() T {
 
 func (s *Stack[T]) Top() T {
 	return s.stack[s.size-1]
+}
+
+func (s *Stack[T]) Size() int {
+	return s.size
 }
 
 func (s *Stack[T]) IsEmpty() bool {
