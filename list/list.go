@@ -70,6 +70,9 @@ func (l *List[V]) Insert(idx int, val V) {
 	if l == nil {
 		panic("list: called Insert() on a nil list")
 	}
+	if idx < 0 || idx >= l.size {
+		panic("list: called Insert() with invalid index")
+	}
 
 	newNode := &node[V]{value: val}
 
@@ -103,6 +106,9 @@ func (l *List[V]) Replace(idx int, val V) {
 	if l == nil {
 		panic("list: called Replace() on a nil list")
 	}
+	if idx < 0 || idx >= l.size {
+		panic("list: called Replace() with invalid index")
+	}
 	if l.size == 0 {
 		return
 	}
@@ -121,6 +127,9 @@ func (l *List[V]) Replace(idx int, val V) {
 func (l *List[V]) Find(idx int) (v V, ok bool) {
 	if l == nil {
 		panic("list: called Find() on a nil list")
+	}
+	if idx < 0 || idx >= l.size {
+		panic("list: called Find() with invalid index")
 	}
 	if l.size == 0 {
 		return v, false
@@ -176,6 +185,9 @@ func (l *List[V]) Remove(idx int) {
 	if l == nil {
 		panic("list: caling Remove() on a nil list")
 	}
+	if idx < 0 || idx >= l.size {
+		panic("list: called Remove() with invalid index")
+	}
 	if l.size == 0 {
 		return
 	}
@@ -216,12 +228,11 @@ func (l *List[V]) Swap(idx1, idx2 int) {
 	if l == nil {
 		panic("list: calling Swap() on a nil list")
 	}
-
 	if idx1 >= l.size || idx1 < 0 {
-		return
+		panic("list: calling Swap() with invalid index")
 	}
 	if idx2 >= l.size || idx2 < 0 {
-		return
+		panic("list: calling Swap() with invalid index")
 	}
 	if idx1 == idx2 {
 		return
@@ -320,6 +331,6 @@ func (l *List[V]) Size() int {
 	return l.size
 }
 
-func (l *List[V]) Empty() bool {
+func (l *List[V]) IsEmpty() bool {
 	return l == nil || l.size == 0
 }
