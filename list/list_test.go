@@ -68,20 +68,47 @@ func TestListPrepend(t *testing.T) {
 func TestListInsert(t *testing.T) {
 	l := List[int]{}
 
+	l.Insert(0, 10)
+	l.Insert(0, 20)
+	l.Insert(1, 30)
+
+	if n := l.Size(); n != 3 {
+		t.Fatalf("Expected size to be %d, got %d instead\n", 3, n)
+	}
+
+	if v, _ := l.Find(0); v != 20 {
+		t.Errorf("Expected l[0] to be %d, got %d instead\n", 20, v)
+	}
+	if v, _ := l.Find(1); v != 10 {
+		t.Errorf("Expected l[1] to be %d, got %d instead\n", 10, v)
+	}
+	if v, _ := l.Find(2); v != 30 {
+		t.Errorf("Expected l[2] to be %d, got %d instead\n", 30, v)
+	}
+}
+
+func TestListInsertAtNegativeIdx(t *testing.T) {
+	l := List[int]{}
+
 	defer func() {
 		if r := recover(); r == nil {
-			t.Errorf("Expected code to panic")
+			t.Fatal("Expected to recover from panic after l.Insert(-1, 10), got nil instead")
 		}
 	}()
 
-	l.Insert(-1, 5)
+	l.Insert(-1, 10)
+}
 
-	if n := l.Size(); n != 0 {
-		t.Errorf("Expected Insert(-1,5) to result in size %d, got %d instead\n",
-			0, l.Size())
-	}
+func TestInsertAtHighIdx(t *testing.T) {
+	l := List[int]{}
 
-	// TODO
+	defer func() {
+		if r := recover(); r == nil {
+			t.Fatal("Expected to recover from panic after l.Insert(-1, 10), got nil instead")
+		}
+	}()
+
+	l.Insert(100, 10)
 }
 
 func TestListReplace(t *testing.T) {
@@ -105,7 +132,17 @@ func TestListRemove(t *testing.T) {
 }
 
 func TestListClear(t *testing.T) {
+	l := List[int]{}
 
+	l.Append(10)
+	l.Append(20)
+	l.Append(30)
+
+	l.Clear()
+
+	if n := l.Size(); n != 0 {
+		t.Fatalf("Expected size to be %d, got %d instead\n", 0, n)
+	}
 }
 
 func TestListSwap(t *testing.T) {
@@ -124,7 +161,18 @@ func TestListSwap(t *testing.T) {
 
 	l.Swap(0, 9)
 
-	// TODO: continue
+	expected := []int{100, 20, 30, 40, 50, 60, 70, 80, 90, 10}
+	res := l.ToSlice()
+
+	if size, expSize := l.Size(), len(expected); size != expSize {
+		t.Fatalf("Expected list size to be %d, got %d instead\n", len(expected), l.Size())
+	}
+
+	for i, n := 0, l.Size(); i < n; i++ {
+		if res[i] != expected[i] {
+			t.Errorf("Expected res[%d] to be %d, got %d instead\n", i, expected[i], res[i])
+		}
+	}
 }
 
 func TestListReverse(t *testing.T) {
@@ -171,7 +219,26 @@ func TestListReverse(t *testing.T) {
 }
 
 func TestListToSlice(t *testing.T) {
+	l := List[int]{}
 
+	l.Append(10)
+	l.Append(20)
+	l.Append(30)
+	l.Append(40)
+	l.Append(50)
+
+	expected := []int{10, 20, 30, 40, 50}
+	res := l.ToSlice()
+
+	if size, expSize := l.Size(), len(expected); size != expSize {
+		t.Fatalf("Expected list size to be %d, got %d instead\n", len(expected), l.Size())
+	}
+
+	for i, n := 0, l.Size(); i < n; i++ {
+		if res[i] != expected[i] {
+			t.Errorf("Expected res[%d] to be %d, got %d instead\n", i, expected[i], res[i])
+		}
+	}
 }
 
 func TestListSize(t *testing.T) {
