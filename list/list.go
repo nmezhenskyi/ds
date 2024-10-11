@@ -70,7 +70,7 @@ func (l *List[V]) Insert(idx int, val V) {
 	if l == nil {
 		panic("list: called Insert() on a nil list")
 	}
-	if idx < 0 || idx >= l.size {
+	if idx < 0 || idx > l.size {
 		panic("list: called Insert() with invalid index")
 	}
 
@@ -80,7 +80,11 @@ func (l *List[V]) Insert(idx int, val V) {
 		// add as first element:
 		l.head = newNode
 		l.tail = newNode
-	} else if idx >= l.size-1 {
+	} else if idx == 0 {
+		temp := l.head
+		l.head = newNode
+		l.head.next = temp
+	} else if idx > l.size-1 {
 		// append to the end:
 		l.tail.next = newNode
 		l.tail = newNode
