@@ -112,23 +112,113 @@ func TestInsertAtHighIdx(t *testing.T) {
 }
 
 func TestListReplace(t *testing.T) {
+	l := List[int]{}
 
+	l.Append(10)
+	l.Append(20)
+	l.Append(30)
+
+	l.Replace(1, 1000)
+
+	if _, ok := l.Find(1); !ok {
+		t.Errorf("Expected ok to be true, got %t instead\n", ok)
+	}
+	if v, _ := l.Find(1); v != 1000 {
+		t.Fatalf("Expected l.Find(1) to return %d, got %d instead\n", 1000, v)
+	}
 }
 
 func TestListFind(t *testing.T) {
+	l := List[int]{}
 
+	l.Append(10)
+
+	v, ok := l.Find(0)
+	if !ok {
+		t.Errorf("Expected l.Find(0) ok to be true after l.Append(10), got %t instead\n", ok)
+	}
+	if v != 10 {
+		t.Errorf("Expected l.Find(0) v to be %d after l.Append(10), got %d instead\n", 10, v)
+	}
+
+	l.Append(20)
+	l.Append(30)
+	l.Append(40)
+
+	v, ok = l.Find(0)
+	if !ok {
+		t.Errorf("Expected l.Find(0) ok to be true, got %t instead\n", ok)
+	}
+	if v != 10 {
+		t.Errorf("Expected l.Find(0) v to be %d, got %d instead\n", 10, v)
+	}
+
+	v, ok = l.Find(1)
+	if !ok {
+		t.Errorf("Expected l.Find(0) ok to be true, got %t instead\n", ok)
+	}
+	if v != 20 {
+		t.Errorf("Expected l.Find(0) v to be %d, got %d instead\n", 20, v)
+	}
 }
 
 func TestListIndexOf(t *testing.T) {
+	l := List[int]{}
 
+	l.Append(10)
+	l.Append(20)
+	l.Append(30)
+
+	if i := l.IndexOf(10); i != 0 {
+		t.Errorf("Expected l.IndexOf(10) to return %d, got %d instead\n", 0, l.IndexOf(10))
+	}
+	if i := l.IndexOf(20); i != 1 {
+		t.Errorf("Expected l.IndexOf(20) to return %d, got %d instead\n", 1, l.IndexOf(20))
+	}
+	if i := l.IndexOf(30); i != 2 {
+		t.Errorf("Expected l.IndexOf(30) to return %d, got %d instead\n", 2, l.IndexOf(30))
+	}
+	if i := l.IndexOf(40); i != -1 {
+		t.Errorf("Expected l.IndexOf(40) to return %d, got %d instead\n", -1, l.IndexOf(40))
+	}
 }
 
 func TestListContains(t *testing.T) {
+	l := List[int]{}
 
+	l.Append(10)
+	l.Append(20)
+	l.Append(30)
+
+	if ok := l.Contains(10); !ok {
+		t.Errorf("Expected l.Contains(10) to return true, got %t instead\n", ok)
+	}
+	if ok := l.Contains(20); !ok {
+		t.Errorf("Expected l.Contains(20) to return true, got %t instead\n", ok)
+	}
+	if ok := l.Contains(30); !ok {
+		t.Errorf("Expected l.Contains(30) to return true, got %t instead\n", ok)
+	}
+	if ok := l.Contains(40); ok {
+		t.Errorf("Expected l.Contains(40) to return false, got %t instead\n", ok)
+	}
 }
 
 func TestListRemove(t *testing.T) {
+	l := List[int]{}
 
+	l.Append(10)
+	l.Append(20)
+	l.Append(30)
+
+	l.Remove(1)
+
+	if _, ok := l.Find(1); ok {
+		t.Errorf("Expected l.Find(1) ok to be false after l.Remove(), got %t instead\n", ok)
+	}
+	if l.Size() != 2 {
+		t.Errorf("Expected l.Size() to be %d, got %d instead\n", 2, l.Size())
+	}
 }
 
 func TestListClear(t *testing.T) {
